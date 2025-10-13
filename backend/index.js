@@ -80,7 +80,7 @@ const io = socketIo(server, {
   maxHttpBufferSize: 1e6
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const JWT_SECRET = 'chatnow-super-secret-jwt-key-2024';
 
 // Multer configuration for image uploads
