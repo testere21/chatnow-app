@@ -130,7 +130,7 @@ export default function Chats() {
   // Chat'leri yükle - sadece bir kez
   useEffect(() => {
     if (authUser?.id && !isLoadingChats && chats.length === 0) {
-      // getChats(); // KALDIRILDI (race condition yaratıyordu)
+      getChats(); // Chat listesi boşsa yükle
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser?.id]);
@@ -156,6 +156,60 @@ export default function Chats() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chats.length, authUser?.id]); // chats yerine chats.length - infinite loop önleme
+
+  // Real-time kullanıcı bilgileri güncelleme
+  useEffect(() => {
+    if (!authUser?.id || chats.length === 0) return;
+
+    const updateUserInfo = async () => {
+      for (const chat of chats) {
+        const parts = chat.id.split('_');
+        const otherUserId = parts[0] === authUser.id ? parts[1] : parts[0];
+        
+        try {
+          // Gerçek kullanıcı bilgilerini al
+          const userInfo = await getUserInfo(otherUserId, true);
+          if (userInfo) {
+            // Chat listesini güncelle
+            setChats(prevChats => 
+              prevChats.map(c => 
+                c.id === chat.id 
+                  ? {
+                      ...c,
+                      name: userInfo.name || c.name,
+                      avatar: userInfo.avatar || c.avatar,
+                      avatarImage: userInfo.avatarImage || c.avatarImage,
+                      bgColor: userInfo.bgColor || c.bgColor,
+                      gender: userInfo.gender || c.gender,
+                      otherUser: {
+                        ...c.otherUser,
+                        name: userInfo.name || c.otherUser?.name,
+                        avatar: userInfo.avatar || c.otherUser?.avatar,
+                        avatar_image: userInfo.avatarImage || c.otherUser?.avatar_image,
+                        bg_color: userInfo.bgColor || c.otherUser?.bg_color,
+                        gender: userInfo.gender || c.otherUser?.gender,
+                        is_online: userInfo.isOnline || false,
+                        last_active: userInfo.lastActive || c.otherUser?.last_active
+                      }
+                    }
+                  : c
+              )
+            );
+          }
+        } catch (error) {
+          // Hata durumunda sessizce devam et
+        }
+      }
+    };
+
+    // İlk yükleme
+    updateUserInfo();
+
+    // Periyodik güncelleme (her 30 saniyede bir)
+    const interval = setInterval(updateUserInfo, 30000);
+
+    return () => clearInterval(interval);
+  }, [authUser?.id, chats.length, getUserInfo]);
 
   // WebSocket listener - Real-time mesaj güncellemeleri
   useEffect(() => {

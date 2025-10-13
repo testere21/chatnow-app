@@ -381,7 +381,76 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         await webSocketService.connect(currentUser.id);
       }
       
-      // Mesaj gönderildikten sonra chat listesini güncelle - KALDIRILDI (count sıfırlıyordu)
+      // Mesaj gönderildikten sonra chat listesini güncelle
+      const chatId = [currentUser.id, receiverId].sort().join('_');
+      setChats(prevChats => {
+        const existingChat = prevChats.find(chat => chat.id === chatId);
+        if (existingChat) {
+          // Mevcut chat'i güncelle
+          return prevChats.map(chat => 
+            chat.id === chatId 
+              ? {
+                  ...chat,
+                  lastMessage: text || 'Resim',
+                  lastTime: new Date()
+                }
+              : chat
+          );
+        } else {
+          // Yeni chat oluştur - gerçek kullanıcı bilgilerini al
+          getUserInfo(receiverId).then(userInfo => {
+            const newChat: Chat = {
+              id: chatId,
+              user1Id: currentUser.id,
+              user2Id: receiverId,
+              lastMessage: text || 'Resim',
+              lastTime: new Date(),
+              unreadCount: 0,
+              name: userInfo.name || 'Kullanıcı',
+              avatar: userInfo.avatar || '👤',
+              bgColor: userInfo.bgColor || '#FFB6C1',
+              gender: userInfo.gender || 'female',
+              otherUser: {
+                id: receiverId,
+                name: userInfo.name || 'Kullanıcı',
+                avatar: userInfo.avatar || '👤',
+                bg_color: userInfo.bgColor || '#FFB6C1',
+                gender: userInfo.gender || 'female',
+                is_online: userInfo.isOnline || false
+              }
+            };
+            
+            // Chat listesini güncelle
+            setChats(prevChats => [newChat, ...prevChats]);
+          }).catch(() => {
+            // Hata durumunda varsayılan değerler
+            const newChat: Chat = {
+              id: chatId,
+              user1Id: currentUser.id,
+              user2Id: receiverId,
+              lastMessage: text || 'Resim',
+              lastTime: new Date(),
+              unreadCount: 0,
+              name: 'Kullanıcı',
+              avatar: '👤',
+              bgColor: '#FFB6C1',
+              gender: 'female',
+              otherUser: {
+                id: receiverId,
+                name: 'Kullanıcı',
+                avatar: '👤',
+                bg_color: '#FFB6C1',
+                gender: 'female',
+                is_online: false
+              }
+            };
+            setChats(prevChats => [newChat, ...prevChats]);
+          });
+          
+          // Geçici olarak varsayılan chat döndür (async işlem tamamlanana kadar)
+          return prevChats;
+        }
+      });
       
       // Response'dan güncel jeton sayısını al
       if (response && (response as any).user && (response as any).user.diamonds !== undefined) {
@@ -705,6 +774,24 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             ...prev,
             [data.userId]: data.isOnline
           }));
+          
+          // Chat listesini de güncelle
+          setChats(prevChats => 
+            prevChats.map(chat => {
+              const parts = chat.id.split('_');
+              const otherUserId = parts[0] === currentUser?.id ? parts[1] : parts[0];
+              if (otherUserId === data.userId) {
+                return {
+                  ...chat,
+                  otherUser: {
+                    ...chat.otherUser,
+                    is_online: data.isOnline
+                  }
+                };
+              }
+              return chat;
+            })
+          );
         };
         
         // Mesaj geldiğinde hem count hem chat listesini güncelle

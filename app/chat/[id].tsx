@@ -6,20 +6,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
+    ActivityIndicator,
+    Dimensions,
+    FlatList,
+    Image,
+    Keyboard,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    useWindowDimensions,
+    View,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { API_CONFIG, ApiService } from '../../config/api';
@@ -293,7 +293,7 @@ export default function ChatDetail() {
       } catch (error) {
         // Hata durumunda sessizce devam et
       }
-    }, 30000); // 30 saniye
+    }, 15000); // 15 saniye - daha sık güncelleme
     
     return () => {
       webSocketService.off('user_info_updated', handleUserInfoUpdate);

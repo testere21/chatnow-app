@@ -26,8 +26,8 @@ interface MessagesResponse {
 // API Configuration
 export const API_CONFIG = {
   // Render Production URLs
-  BASE_URL: 'https://chatnow-backend.onrender.com',
-  WEBSOCKET_URL: 'https://chatnow-backend.onrender.com',
+  BASE_URL: 'https://chatnow-app.onrender.com',
+  WEBSOCKET_URL: 'https://chatnow-app.onrender.com',
   
   
 

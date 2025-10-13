@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatNow - Google Play Store Yol Haritası</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #007AFF, #0056CC);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .roadmap {
+            padding: 40px;
+        }
+        
+        .phase {
+            margin-bottom: 40px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .phase-header {
+            padding: 20px 30px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .phase-1 { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .phase-2 { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+        .phase-3 { background: linear-gradient(135deg, #45B7D1, #96C93D); }
+        .phase-4 { background: linear-gradient(135deg, #F093FB, #F5576C); }
+        
+        .phase-content {
+            padding: 30px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .step:hover {
+            background: #f8f9fa;
+            padding-left: 10px;
+        }
+        
+        .step-number {
+            background: #007AFF;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .step-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-pending { background: #FFF3CD; color: #856404; }
+        .status-progress { background: #D1ECF1; color: #0C5460; }
+        .status-completed { background: #D4EDDA; color: #155724; }
+        
+        .timeline {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .timeline h3 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+        
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #007AFF;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-title {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .timeline-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #007AFF, #0056CC);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007AFF;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .roadmap { padding: 20px; }
+            .phase-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ChatNow - Google Play Store Yol Haritası</h1>
+            <p>Adım adım Google Play Store'a yükleme rehberi</p>
+        </div>
+        
+        <div class="roadmap">
+            <!-- FAZE 1: HAZIRLIK -->
+            <div class="phase">
+                <div class="phase-header phase-1">
+                    🎯 FAZE 1: HAZIRLIK
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Google Play Console Hesabı</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <a href="https://play.google.com/console" target="_blank">play.google.com/console</a> adresine git<br>
+                                2. Google hesabınla giriş yap<br>
+                                3. "Developer hesabı oluştur" butonuna tıkla<br>
+                                4. Kişisel bilgilerini doldur (ad, soyad, telefon)<br>
+                                5. Adres bilgilerini gir<br>
+                                6. 25$ ödeme yap (kredi kartı/debit kart)<br>
+                                7. Telefon doğrulaması yap (SMS kodu)<br>
+                                8. 1-3 gün bekle (Google doğrulama yapar)<br>
+                                <strong>SONUÇ:</strong> Developer hesabın aktif olur
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Release Keystore Oluştur</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Bilgisayarında "cmd" aç (Windows tuşu + R, cmd yaz)<br>
+                                2. Proje klasörüne git: <code>cd C:\Users\PC\Desktop\yeniFerhat\MyTodoApp3\android</code><br>
+                                3. Keystore oluştur: <code>keytool -genkey -v -keystore release-key.keystore -alias release-key -keyalg RSA -keysize 2048 -validity 10000</code><br>
+                                4. Şifre belirle (UNUTMA! Bu şifreyi kaydet)<br>
+                                5. Kişisel bilgilerini gir (ad, şirket, şehir, ülke)<br>
+                                6. Keystore dosyası oluşur: <code>release-key.keystore</code><br>
+                                7. Bu dosyayı GÜVENLİ yere yedekle (USB, bulut)<br>
+                                <strong>ÖNEMLİ:</strong> Bu dosyayı kaybedersen uygulamayı güncelleyemezsin!
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Privacy Policy Web Sitesi</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR (GitHub Pages - ÜCRETSİZ):</strong><br>
+                                1. <a href="https://github.com" target="_blank">github.com</a> adresine git<br>
+                                2. GitHub hesabı oluştur (ücretsiz)<br>
+                                3. "New repository" butonuna tıkla<br>
+                                4. Repository adı: <code>chatnow-privacy</code><br>
+                                5. "Public" seç (ücretsiz olması için)<br>
+                                6. "Create repository" tıkla<br>
+                                7. "Add file" → "Create new file"<br>
+                                8. Dosya adı: <code>index.html</code><br>
+                                9. Basit privacy policy HTML kodu yapıştır<br>
+                                10. "Commit changes" tıkla<br>
+                                11. Settings → Pages → Source: "Deploy from a branch"<br>
+                                12. Branch: "main" seç → "Save"<br>
+                                13. 5 dakika bekle → URL hazır: <code>https://[kullanıcıadı].github.io/chatnow-privacy</code><br>
+                                <strong>SONUÇ:</strong> Privacy policy web sitesi hazır<br>
+                                <br>
+                                <strong>📄 PRIVACY POLICY HTML KODU:</strong><br>
+                                <textarea style="width: 100%; height: 200px; font-size: 12px; background: #f8f9fa; border: 1px solid #ddd; padding: 10px; border-radius: 5px; font-family: monospace;"><!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatNow - Gizlilik Politikası</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #007AFF; }
+        h2 { color: #333; margin-top: 30px; }
+        .highlight { background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>🔒 ChatNow Gizlilik Politikası</h1>
+    
+    <div class="highlight">
+        <strong>Son güncelleme:</strong> [Tarih]<br>
+        <strong>Uygulama:</strong> ChatNow<br>
+        <strong>Geliştirici:</strong> [Adınız]
+    </div>
+    
+    <h2>📱 Toplanan Bilgiler</h2>
+    <p>ChatNow uygulaması aşağıdaki bilgileri toplar:</p>
+    <ul>
+        <li><strong>Kullanıcı bilgileri:</strong> Ad, soyad, profil resmi</li>
+        <li><strong>Mesajlar:</strong> Gönderdiğiniz metin mesajları ve resimler</li>
+        <li><strong>Cihaz bilgileri:</strong> Cihaz modeli, işletim sistemi</li>
+        <li><strong>Kullanım verileri:</strong> Uygulama kullanım istatistikleri</li>
+    </ul>
+    
+    <h2>🔐 Bilgi Güvenliği</h2>
+    <p>• Tüm mesajlar şifrelenerek saklanır</p>
+    <p>• Kişisel bilgileriniz üçüncü taraflarla paylaşılmaz</p>
+    <p>• Güvenli sunucular kullanılır</p>
+    
+    <h2>📞 İletişim</h2>
+    <p>Sorularınız için: [email@adresiniz.com]</p>
+    
+    <p><em>Bu gizlilik politikası ChatNow uygulaması için geçerlidir.</em></p>
+</body>
+</html></textarea>
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAZE 2: TEKNİK -->
+            <div class="phase">
+                <div class="phase-header phase-2">
+                    🔧 FAZE 2: TEKNİK
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">App Bundle (AAB) Oluştur</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Proje klasöründe <code>android/app/build.gradle</code> dosyasını aç<br>
+                                2. Release keystore ayarlarını ekle:<br>
+                                <code>signingConfigs {<br>
+                                &nbsp;&nbsp;release {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;storeFile file('release-key.keystore')<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;storePassword 'ŞİFREN'<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;keyAlias 'release-key'<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;keyPassword 'ŞİFREN'<br>
+                                &nbsp;&nbsp;}<br>
+                                }</code><br>
+                                3. buildTypes → release kısmında: <code>signingConfig signingConfigs.release</code><br>
+                                4. CMD aç: <code>cd android</code><br>
+                                5. AAB oluştur: <code>gradlew bundleRelease</code><br>
+                                6. Dosya hazır: <code>android/app/build/outputs/bundle/release/app-release.aab</code><br>
+                                <strong>SONUÇ:</strong> Play Store için AAB dosyası hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <div class="step-title">Store Listing Hazırla</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                <strong>📱 EKRAN GÖRÜNTÜLERİ (5-8 adet):</strong><br>
+                                1. Telefonda uygulamayı aç<br>
+                                2. Ekran görüntüsü al (Power + Volume Down)<br>
+                                3. Ana sayfa, chat listesi, mesaj ekranı, profil<br>
+                                4. Görüntüleri bilgisayara aktar<br>
+                                5. Boyut: 1080x1920 piksel (telefon ekranı)<br>
+                                <br>
+                                <strong>📝 AÇIKLAMA HAZIRLA:</strong><br>
+                                • Uygulama adı: "ChatNow"<br>
+                                • Kısa açıklama: "Güvenli ve hızlı mesajlaşma uygulaması"<br>
+                                • Uzun açıklama: "ChatNow ile arkadaşlarınla güvenli mesajlaş. Gerçek zamanlı sohbet, emoji desteği ve daha fazlası!"<br>
+                                • Kategori: "Sosyal"<br>
+                                • Yaş sınırı: "13+"<br>
+                                <br>
+                                <strong>🎨 UYGULAMA İKONU:</strong><br>
+                                • 512x512 piksel PNG formatı<br>
+                                • Şeffaf arka plan<br>
+                                • Yüksek kalite
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <div class="step-title">Content Rating</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Play Console'da "Content rating" bölümüne git<br>
+                                2. "Start questionnaire" tıkla<br>
+                                3. Soruları yanıtla:<br>
+                                • <strong>Violence:</strong> "No" (şiddet yok)<br>
+                                • <strong>Sexual content:</strong> "No" (cinsel içerik yok)<br>
+                                • <strong>Profanity:</strong> "No" (küfür yok)<br>
+                                • <strong>User-generated content:</strong> "Yes" (kullanıcı mesajları var)<br>
+                                • <strong>Social features:</strong> "Yes" (sosyal özellikler var)<br>
+                                • <strong>Location sharing:</strong> "No" (konum paylaşımı yok)<br>
+                                4. "Save" tıkla<br>
+                                5. Sonuç: "Teen" (13+) rating alacaksın<br>
+                                <strong>SONUÇ:</strong> İçerik derecelendirmesi tamamlandı
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAZE 3: YÜKLEME -->
+            <div class="phase">
+                <div class="phase-header phase-3">
+                    🚀 FAZE 3: YÜKLEME
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <div class="step-title">Play Console'a AAB Yükle</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <a href="https://play.google.com/console" target="_blank">play.google.com/console</a> adresine git<br>
+                                2. "Create app" butonuna tıkla<br>
+                                3. App bilgilerini doldur:<br>
+                                • <strong>App name:</strong> "ChatNow"<br>
+                                • <strong>Default language:</strong> "Turkish (Turkey)"<br>
+                                • <strong>App or game:</strong> "App"<br>
+                                • <strong>Free or paid:</strong> "Free"<br>
+                                4. "Create app" tıkla<br>
+                                5. Sol menüden "Release" → "Production" tıkla<br>
+                                6. "Create new release" tıkla<br>
+                                7. "App bundles" bölümünde "Upload" tıkla<br>
+                                8. AAB dosyasını seç: <code>android/app/build/outputs/bundle/release/app-release.aab</code><br>
+                                9. "Save" tıkla<br>
+                                <strong>SONUÇ:</strong> AAB dosyası Play Console'a yüklendi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <div class="step-title">Store Listing Doldur</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Sol menüden "Store listing" tıkla<br>
+                                2. <strong>App details:</strong><br>
+                                • <strong>App name:</strong> "ChatNow"<br>
+                                • <strong>Short description:</strong> "Güvenli ve hızlı mesajlaşma uygulaması"<br>
+                                • <strong>Full description:</strong> "ChatNow ile arkadaşlarınla güvenli mesajlaş. Gerçek zamanlı sohbet, emoji desteği ve daha fazlası!"<br>
+                                3. <strong>Graphics:</strong><br>
+                                • <strong>App icon:</strong> 512x512 PNG yükle<br>
+                                • <strong>Feature graphic:</strong> 1024x500 PNG yükle<br>
+                                • <strong>Screenshots:</strong> 5-8 adet telefon ekran görüntüsü<br>
+                                4. <strong>Contact details:</strong><br>
+                                • <strong>Website:</strong> Privacy policy URL'si<br>
+                                • <strong>Email:</strong> Senin email adresin<br>
+                                • <strong>Phone:</strong> Telefon numaran (opsiyonel)<br>
+                                5. <strong>App category:</strong> "Social" seç<br>
+                                6. "Save draft" tıkla<br>
+                                <strong>SONUÇ:</strong> Store listing tamamlandı
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">9</div>
+                        <div class="step-content">
+                            <div class="step-title">İnceleme İçin Gönder</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Sol menüden "Release" → "Production" tıkla<br>
+                                2. "Review release" butonuna tıkla<br>
+                                3. Tüm bilgilerin doğru olduğunu kontrol et:<br>
+                                • AAB dosyası yüklü ✓<br>
+                                • Store listing dolu ✓<br>
+                                • Content rating tamamlandı ✓<br>
+                                • Privacy policy linki var ✓<br>
+                                4. "Send for review" butonuna tıkla<br>
+                                5. Onay kutusunu işaretle: "I understand..."<br>
+                                6. "Send for review" tıkla<br>
+                                7. Durum: "Under review" olur<br>
+                                <strong>SONUÇ:</strong> Google incelemesi başladı (1-3 gün sürer)
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAZE 4: BEKLEME -->
+            <div class="phase">
+                <div class="phase-header phase-4">
+                    ⏳ FAZE 4: BEKLEME
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">10</div>
+                        <div class="step-content">
+                            <div class="step-title">Google İncelemesi</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Play Console'da "Release" → "Production" kontrol et<br>
+                                2. Durum: "Under review" görünür<br>
+                                3. <strong>İnceleme süreci:</strong><br>
+                                • Google ekibi uygulamayı test eder<br>
+                                • Güvenlik kontrolü yapar<br>
+                                • İçerik uygunluğunu kontrol eder<br>
+                                • Teknik sorunları arar<br>
+                                4. <strong>Bekleme süresi:</strong> 1-3 gün<br>
+                                5. Email bildirimi gelir (sonuç için)<br>
+                                <strong>SONUÇ:</strong> İnceleme tamamlandı
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">11</div>
+                        <div class="step-content">
+                            <div class="step-title">Onay/Red Sonucu</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                <strong>✅ ONAY ALIRSA:</strong><br>
+                                1. Email: "Your app has been approved"<br>
+                                2. Play Console'da durum: "Published"<br>
+                                3. Uygulama Play Store'da görünür<br>
+                                4. İndirme linki hazır<br>
+                                <br>
+                                <strong>❌ RED ALIRSA:</strong><br>
+                                1. Email: "Your app was rejected"<br>
+                                2. Red nedenleri listelenir<br>
+                                3. Sorunları düzelt<br>
+                                4. Tekrar gönder<br>
+                                <br>
+                                <strong>SONUÇ:</strong> Google'dan sonuç geldi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">12</div>
+                        <div class="step-content">
+                            <div class="step-title">Yayınlama</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                <strong>🎉 BAŞARILI YAYINLAMA:</strong><br>
+                                1. Play Store'da uygulamanı ara: "ChatNow"<br>
+                                2. İndirme linkini paylaş<br>
+                                3. Arkadaşlarına haber ver<br>
+                                4. İstatistikleri takip et<br>
+                                <br>
+                                <strong>📊 SONRAKI ADIMLAR:</strong><br>
+                                • Kullanıcı yorumlarını takip et<br>
+                                • İndirme sayılarını kontrol et<br>
+                                • Güncellemeler yap (yeni APK/AAB)<br>
+                                • Reklam ver (opsiyonel)<br>
+                                <br>
+                                <strong>SONUÇ:</strong> Uygulama başarıyla yayınlandı! 🚀
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAZE 5: SATIN ALMA SİSTEMİ -->
+            <div class="phase">
+                <div class="phase-header" style="background: linear-gradient(135deg, #FFD700, #FFA500);">
+                    💰 FAZE 5: SATIN ALMA SİSTEMİ
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">13</div>
+                        <div class="step-content">
+                            <div class="step-title">Google Play Billing Kurulumu</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>npm install react-native-iap</code> komutunu çalıştır<br>
+                                2. <code>android/app/build.gradle</code> dosyasına ekle:<br>
+                                <code>implementation 'com.android.billingclient:billing:5.0.0'</code><br>
+                                3. <code>app.json</code> dosyasına ekle:<br>
+                                <code>"plugins": ["react-native-iap"]</code><br>
+                                4. <code>npx expo install --fix</code> çalıştır<br>
+                                5. <code>npx expo prebuild</code> çalıştır<br>
+                                <strong>SONUÇ:</strong> Google Play Billing hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">14</div>
+                        <div class="step-content">
+                            <div class="step-title">Play Console'da Ürünler Oluştur</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Play Console'da "Monetize" → "Products" tıkla<br>
+                                2. "Create product" tıkla<br>
+                                3. <strong>Ürün 1:</strong> "100_jeton" - 10 TL<br>
+                                4. <strong>Ürün 2:</strong> "500_jeton" - 45 TL<br>
+                                5. <strong>Ürün 3:</strong> "1000_jeton" - 80 TL<br>
+                                6. <strong>Ürün 4:</strong> "2500_jeton" - 180 TL<br>
+                                7. Her ürün için "Active" durumuna getir<br>
+                                <strong>SONUÇ:</strong> Satın alınabilir ürünler hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">15</div>
+                        <div class="step-content">
+                            <div class="step-title">Frontend Satın Alma Kodu</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>app/tokens/purchase.tsx</code> dosyasını güncelle<br>
+                                2. <code>react-native-iap</code> import et<br>
+                                3. <code>getProducts()</code> fonksiyonu ekle<br>
+                                4. <code>requestPurchase()</code> fonksiyonu ekle<br>
+                                5. <code>getPurchaseHistory()</code> fonksiyonu ekle<br>
+                                6. Gerçek ödeme işlemi yap<br>
+                                7. Backend'e ödeme bilgisi gönder<br>
+                                <strong>SONUÇ:</strong> Gerçek satın alma sistemi çalışıyor
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">16</div>
+                        <div class="step-content">
+                            <div class="step-title">Backend Ödeme Doğrulama</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>backend/index.js</code> dosyasına ekle:<br>
+                                <code>const { validateReceipt } = require('react-native-iap');</code><br>
+                                2. <code>/api/verify-purchase</code> endpoint oluştur<br>
+                                3. Google Play receipt doğrula<br>
+                                4. Kullanıcıya jeton ekle<br>
+                                5. Ödeme geçmişini kaydet<br>
+                                6. Hata durumlarını handle et<br>
+                                <strong>SONUÇ:</strong> Güvenli ödeme doğrulama sistemi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">17</div>
+                        <div class="step-content">
+                            <div class="step-title">Test Satın Almalar</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Play Console'da "Testing" → "License testing" tıkla<br>
+                                2. Test hesapları ekle (kendi email'in)<br>
+                                3. "Internal testing" grubu oluştur<br>
+                                4. Test APK'sını yükle<br>
+                                5. Test satın almalar yap<br>
+                                6. Jetonların doğru eklendiğini kontrol et<br>
+                                7. Hata durumlarını test et<br>
+                                <strong>SONUÇ:</strong> Satın alma sistemi test edildi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">18</div>
+                        <div class="step-content">
+                            <div class="step-title">Canlı Yayın</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Test sonuçları başarılı ise<br>
+                                2. "Production" release oluştur<br>
+                                3. AAB dosyasını yükle<br>
+                                4. "Review" için gönder<br>
+                                5. Google onayını bekle<br>
+                                6. Canlı yayına al<br>
+                                7. Gerçek satın almalar başlar<br>
+                                <strong>SONUÇ:</strong> Para kazanmaya başla! 💰
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAZE 6: ADMIN PANELİ -->
+            <div class="phase">
+                <div class="phase-header" style="background: linear-gradient(135deg, #8B5CF6, #A855F7);">
+                    🔧 FAZE 6: ADMIN PANELİ
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">19</div>
+                        <div class="step-content">
+                            <div class="step-title">Admin Panel Teknik Altyapı</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>backend/admin/</code> klasörü oluştur<br>
+                                2. <code>npm install express-session bcryptjs</code> komutunu çalıştır<br>
+                                3. <code>backend/admin/index.html</code> dosyası oluştur<br>
+                                4. <code>backend/admin/login.html</code> dosyası oluştur<br>
+                                5. <code>backend/admin/dashboard.html</code> dosyası oluştur<br>
+                                6. <code>backend/admin/users.html</code> dosyası oluştur<br>
+                                7. <code>backend/admin/messages.html</code> dosyası oluştur<br>
+                                8. <code>backend/admin/tokens.html</code> dosyası oluştur<br>
+                                <strong>SONUÇ:</strong> Admin panel dosya yapısı hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">20</div>
+                        <div class="step-content">
+                            <div class="step-title">Admin Giriş Sistemi</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>backend/routes/admin.js</code> dosyası oluştur<br>
+                                2. Admin kullanıcı oluştur:<br>
+                                <code>const adminUser = {<br>
+                                &nbsp;&nbsp;username: 'admin',<br>
+                                &nbsp;&nbsp;password: 'güçlü_şifre_2024',<br>
+                                &nbsp;&nbsp;role: 'admin'<br>
+                                }</code><br>
+                                3. <code>/admin/login</code> endpoint oluştur<br>
+                                4. <code>/admin/logout</code> endpoint oluştur<br>
+                                5. Session yönetimi ekle<br>
+                                6. Güvenli şifre hash'leme<br>
+                                7. IP kısıtlaması ekle<br>
+                                <strong>SONUÇ:</strong> Güvenli admin giriş sistemi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">21</div>
+                        <div class="step-content">
+                            <div class="step-title">Kullanıcı Yönetimi</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>/admin/users</code> endpoint oluştur<br>
+                                2. Kullanıcı listesi API:<br>
+                                <code>GET /admin/users?page=1&limit=50</code><br>
+                                3. Kullanıcı arama API:<br>
+                                <code>GET /admin/users/search?q=ferhat</code><br>
+                                4. Kullanıcı detay API:<br>
+                                <code>GET /admin/users/:id</code><br>
+                                5. Kullanıcı engelleme API:<br>
+                                <code>POST /admin/users/:id/block</code><br>
+                                6. Kullanıcı silme API:<br>
+                                <code>DELETE /admin/users/:id</code><br>
+                                7. Kullanıcı istatistikleri API<br>
+                                <strong>SONUÇ:</strong> Kullanıcı yönetim sistemi hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">22</div>
+                        <div class="step-content">
+                            <div class="step-title">Mesajlaşma Yönetimi</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>/admin/messages</code> endpoint oluştur<br>
+                                2. Mesaj listesi API:<br>
+                                <code>GET /admin/messages?page=1&limit=100</code><br>
+                                3. Mesaj arama API:<br>
+                                <code>GET /admin/messages/search?q=spam</code><br>
+                                4. Mesaj silme API:<br>
+                                <code>DELETE /admin/messages/:id</code><br>
+                                5. Spam raporları API:<br>
+                                <code>GET /admin/messages/reports</code><br>
+                                6. Mesaj moderasyonu API<br>
+                                7. Otomatik spam tespiti<br>
+                                <strong>SONUÇ:</strong> Mesaj moderasyon sistemi hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">23</div>
+                        <div class="step-content">
+                            <div class="step-title">Jeton ve Ödeme Yönetimi</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>/admin/tokens</code> endpoint oluştur<br>
+                                2. Jeton satışları API:<br>
+                                <code>GET /admin/tokens/sales?date=2024-01-01</code><br>
+                                3. Jeton harcamaları API:<br>
+                                <code>GET /admin/tokens/expenses?user_id=123</code><br>
+                                4. Manuel jeton ekleme API:<br>
+                                <code>POST /admin/tokens/add</code><br>
+                                5. Ödeme geçmişi API:<br>
+                                <code>GET /admin/payments?status=success</code><br>
+                                6. Gelir raporları API<br>
+                                7. Grafik verileri API<br>
+                                <strong>SONUÇ:</strong> Finansal yönetim sistemi hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">24</div>
+                        <div class="step-content">
+                            <div class="step-title">Dashboard ve İstatistikler</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>/admin/dashboard</code> endpoint oluştur<br>
+                                2. Ana sayfa istatistikleri:<br>
+                                • Aktif kullanıcı sayısı<br>
+                                • Günlük mesaj sayısı<br>
+                                • Jeton satışları<br>
+                                • Gelir grafikleri<br>
+                                3. <code>GET /admin/stats</code> API oluştur<br>
+                                4. Grafik verileri API:<br>
+                                <code>GET /admin/stats/charts?period=30days</code><br>
+                                5. Gerçek zamanlı veriler<br>
+                                6. Export özelliği (Excel/CSV)<br>
+                                7. Email raporları<br>
+                                <strong>SONUÇ:</strong> Kapsamlı dashboard sistemi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">25</div>
+                        <div class="step-content">
+                            <div class="step-title">Güvenlik ve Yetkilendirme</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Admin yetki seviyeleri:<br>
+                                • Super Admin (tüm yetkiler)<br>
+                                • Moderator (mesaj yönetimi)<br>
+                                • Support (kullanıcı desteği)<br>
+                                2. IP kısıtlaması ekle<br>
+                                3. 2FA (iki faktörlü kimlik doğrulama)<br>
+                                4. Session timeout (30 dakika)<br>
+                                5. Log kayıtları:<br>
+                                <code>GET /admin/logs?action=login</code><br>
+                                6. Güvenlik uyarıları<br>
+                                7. Otomatik logout<br>
+                                <strong>SONUÇ:</strong> Güvenli admin sistemi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">26</div>
+                        <div class="step-content">
+                            <div class="step-title">Mobil Admin Uygulaması</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>admin-app/</code> klasörü oluştur<br>
+                                2. React Native admin uygulaması<br>
+                                3. Temel özellikler:<br>
+                                • Kullanıcı listesi<br>
+                                • Mesaj moderasyonu<br>
+                                • Jeton yönetimi<br>
+                                • İstatistikler<br>
+                                4. Push notification sistemi<br>
+                                5. Offline çalışma desteği<br>
+                                6. Biometric giriş<br>
+                                7. Admin uygulamasını yayınla<br>
+                                <strong>SONUÇ:</strong> Mobil admin erişimi hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAZE 7: WEB SİTESİ -->
+            <div class="phase">
+                <div class="phase-header" style="background: linear-gradient(135deg, #10B981, #059669);">
+                    🌐 FAZE 7: WEB SİTESİ
+                </div>
+                <div class="phase-content">
+                    <div class="step">
+                        <div class="step-number">27</div>
+                        <div class="step-content">
+                            <div class="step-title">Web Sitesi Teknik Altyapı</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>website/</code> klasörü oluştur<br>
+                                2. <code>website/index.html</code> dosyası oluştur<br>
+                                3. <code>website/privacy.html</code> dosyası oluştur<br>
+                                4. <code>website/terms.html</code> dosyası oluştur<br>
+                                5. <code>website/contact.html</code> dosyası oluştur<br>
+                                6. <code>website/support.html</code> dosyası oluştur<br>
+                                7. <code>website/css/style.css</code> dosyası oluştur<br>
+                                8. <code>website/js/main.js</code> dosyası oluştur<br>
+                                <strong>SONUÇ:</strong> Web sitesi dosya yapısı hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">28</div>
+                        <div class="step-content">
+                            <div class="step-title">Ana Sayfa Tasarımı</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>index.html</code> dosyasını düzenle:<br>
+                                • Header (logo, navigasyon)<br>
+                                • Hero section (ChatNow tanıtımı)<br>
+                                • Özellikler bölümü<br>
+                                • Ekran görüntüleri<br>
+                                • İndirme linkleri<br>
+                                • Footer (iletişim, linkler)<br>
+                                2. Responsive tasarım (mobil uyumlu)<br>
+                                3. Modern CSS (Flexbox, Grid)<br>
+                                4. Animasyonlar ve geçişler<br>
+                                5. ChatNow renk paleti<br>
+                                6. Google Fonts entegrasyonu<br>
+                                <strong>SONUÇ:</strong> Profesyonel ana sayfa hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">29</div>
+                        <div class="step-content">
+                            <div class="step-title">Privacy Policy Sayfası</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>privacy.html</code> dosyasını düzenle<br>
+                                2. Gerekli bölümler:<br>
+                                • Toplanan bilgiler<br>
+                                • Bilgi kullanımı<br>
+                                • Bilgi paylaşımı<br>
+                                • Veri güvenliği<br>
+                                • Çerezler (cookies)<br>
+                                • Kullanıcı hakları<br>
+                                • İletişim bilgileri<br>
+                                3. GDPR uyumlu içerik<br>
+                                4. Türkçe ve İngilizce versiyon<br>
+                                5. Son güncelleme tarihi<br>
+                                <strong>SONUÇ:</strong> Yasal uyumlu privacy policy
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">30</div>
+                        <div class="step-content">
+                            <div class="step-title">Terms of Service Sayfası</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>terms.html</code> dosyasını düzenle<br>
+                                2. Gerekli bölümler:<br>
+                                • Hizmet şartları<br>
+                                • Kullanıcı yükümlülükleri<br>
+                                • Yasaklı kullanımlar<br>
+                                • Hesap güvenliği<br>
+                                • Fikri mülkiyet hakları<br>
+                                • Hizmet değişiklikleri<br>
+                                • Sorumluluk sınırları<br>
+                                3. Yasal uyumlu içerik<br>
+                                4. Türkçe ve İngilizce versiyon<br>
+                                5. Son güncelleme tarihi<br>
+                                <strong>SONUÇ:</strong> Kapsamlı kullanım şartları
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">31</div>
+                        <div class="step-content">
+                            <div class="step-title">İletişim ve Destek Sayfası</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. <code>contact.html</code> dosyasını düzenle<br>
+                                2. İletişim bilgileri:<br>
+                                • E-posta: support@chatnowapp.com<br>
+                                • Telefon: +90 5XX XXX XX XX<br>
+                                • Adres: [Şirket adresi]<br>
+                                3. <code>support.html</code> dosyasını düzenle<br>
+                                4. SSS (Sık Sorulan Sorular)<br>
+                                5. Teknik destek formu<br>
+                                6. Geri bildirim formu<br>
+                                7. Canlı destek (opsiyonel)<br>
+                                <strong>SONUÇ:</strong> Kullanıcı desteği sistemi hazır
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">32</div>
+                        <div class="step-content">
+                            <div class="step-title">SEO ve Performans Optimizasyonu</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. Meta tag'ler ekle:<br>
+                                <code>&lt;meta name="description" content="ChatNow - Güvenli mesajlaşma uygulaması"&gt;</code><br>
+                                <code>&lt;meta name="keywords" content="mesajlaşma, chat, güvenli"&gt;</code><br>
+                                2. Open Graph tag'ler:<br>
+                                <code>&lt;meta property="og:title" content="ChatNow"&gt;</code><br>
+                                <code>&lt;meta property="og:description" content="Güvenli mesajlaşma uygulaması"&gt;</code><br>
+                                3. Sitemap.xml oluştur<br>
+                                4. robots.txt dosyası oluştur<br>
+                                5. Google Analytics entegrasyonu<br>
+                                6. Sayfa hızı optimizasyonu<br>
+                                7. Mobil uyumluluk testi<br>
+                                <strong>SONUÇ:</strong> SEO optimize edilmiş web sitesi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">33</div>
+                        <div class="step-content">
+                            <div class="step-title">Hosting ve Domain Kurulumu</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                <strong>Seçenek 1: GitHub Pages (Ücretsiz):</strong><br>
+                                1. GitHub'da repository oluştur<br>
+                                2. <code>website/</code> klasörünü yükle<br>
+                                3. Settings → Pages → Deploy<br>
+                                4. URL: <code>https://ferhatkortak.github.io/chatnow</code><br>
+                                <br>
+                                <strong>Seçenek 2: Netlify (Ücretsiz):</strong><br>
+                                1. Netlify hesabı oluştur<br>
+                                2. Website klasörünü drag & drop<br>
+                                3. Otomatik deploy<br>
+                                4. URL: <code>https://chatnow-app.netlify.app</code><br>
+                                <br>
+                                <strong>Seçenek 3: Render (Mevcut Backend):</strong><br>
+                                1. <code>backend/public/</code> klasörüne kopyala<br>
+                                2. <code>backend/index.js</code> dosyasına ekle<br>
+                                3. URL: <code>https://chatnow-app.onrender.com</code><br>
+                                <strong>SONUÇ:</strong> Web sitesi canlı yayında
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">34</div>
+                        <div class="step-content">
+                            <div class="step-title">SSL Sertifikası ve Güvenlik</div>
+                            <div class="step-desc">
+                                <strong>DETAYLI ADIMLAR:</strong><br>
+                                1. SSL sertifikası kontrolü:<br>
+                                • HTTPS zorunlu<br>
+                                • Güvenli bağlantı<br>
+                                • SSL Labs testi<br>
+                                2. Güvenlik başlıkları ekle:<br>
+                                <code>X-Content-Type-Options: nosniff</code><br>
+                                <code>X-Frame-Options: DENY</code><br>
+                                <code>X-XSS-Protection: 1; mode=block</code><br>
+                                3. Content Security Policy (CSP)<br>
+                                4. HSTS (HTTP Strict Transport Security)<br>
+                                5. Güvenlik testleri yap<br>
+                                6. Vulnerability taraması<br>
+                                7. Güvenlik raporu oluştur<br>
+                                <strong>SONUÇ:</strong> Güvenli ve güvenilir web sitesi
+                            </div>
+                        </div>
+                        <div class="status status-pending">Bekliyor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- İLERLEME ÇUBUĞU -->
+            <div class="timeline">
+                <h3>📊 Genel İlerleme</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p style="text-align: center; color: #666; margin-top: 10px;">
+                    <span id="progressText">0%</span> Tamamlandı
+                </p>
+            </div>
+            
+            <!-- İSTATİSTİKLER -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">34</div>
+                    <div class="stat-label">Toplam Adım</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Faz</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10-20</div>
+                    <div class="stat-label">Gün (Tahmini)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">25$</div>
+                    <div class="stat-label">Tek Seferlik Ücret</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">30%</div>
+                    <div class="stat-label">Google Komisyon</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">🌐</div>
+                    <div class="stat-label">Web Sitesi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">🔧</div>
+                    <div class="stat-label">Admin Panel</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">💰</div>
+                    <div class="stat-label">Para Kazanma</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">📱</div>
+                    <div class="stat-label">Mobil Admin</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // İlerleme çubuğu animasyonu
+        function updateProgress() {
+            const completedSteps = document.querySelectorAll('.status-completed').length;
+            const totalSteps = document.querySelectorAll('.step').length;
+            const percentage = Math.round((completedSteps / totalSteps) * 100);
+            
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '%';
+        }
+        
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', updateProgress);
+        
+        // Adım durumlarını güncellemek için (manuel)
+        function markStepCompleted(stepNumber) {
+            const steps = document.querySelectorAll('.step');
+            if (steps[stepNumber - 1]) {
+                const statusElement = steps[stepNumber - 1].querySelector('.status');
+                statusElement.className = 'status status-completed';
+                statusElement.textContent = 'Tamamlandı';
+                updateProgress();
+            }
+        }
+        
+        // Örnek kullanım:
+        // markStepCompleted(1); // 1. adımı tamamlandı olarak işaretle
+    </script>
+</body>
+</html>
