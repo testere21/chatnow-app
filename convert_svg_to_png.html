@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SVG to PNG Converter</title>
+</head>
+<body>
+    <h2>Convert CN Icon SVG to PNG</h2>
+    
+    <div id="svgContainer"></div>
+    
+    <br><br>
+    <button onclick="convertToPNG(512, 'icon.png')">Generate icon.png (512x512)</button>
+    <br><br>
+    <button onclick="convertToPNG(512, 'splash-icon.png')">Generate splash-icon.png (512x512)</button>
+    
+    <script>
+        // Load the SVG content
+        const svgContent = `<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="4" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.3)"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#bgGradient)" rx="200"/>
+  
+  <!-- Subtle pattern -->
+  <circle cx="200" cy="200" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="400" cy="300" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="600" cy="150" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="800" cy="250" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="300" cy="500" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="700" cy="400" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="150" cy="700" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="500" cy="600" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="850" cy="700" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="350" cy="800" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="650" cy="750" r="2" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- CN Text -->
+  <text x="512" y="512" font-family="Arial, sans-serif" font-size="400" font-weight="bold" 
+        text-anchor="middle" dominant-baseline="middle" fill="#FFFFFF" filter="url(#shadow)">CN</text>
+  
+  <!-- Border -->
+  <rect x="20" y="20" width="984" height="984" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8" rx="200"/>
+</svg>`;
+
+        // Display SVG
+        document.getElementById('svgContainer').innerHTML = svgContent;
+        
+        function convertToPNG(size, filename) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Create a new SVG element with the desired size
+            const svg = new DOMParser().parseFromString(svgContent, 'image/svg+xml').documentElement;
+            svg.setAttribute('width', size);
+            svg.setAttribute('height', size);
+            
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const img = new Image();
+            
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, size, size);
+                
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            };
+            
+            img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+        }
+    </script>
+</body>
+</html>

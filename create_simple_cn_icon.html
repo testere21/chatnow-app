@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatNow CN Icon - Simple</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid #333;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            margin: 20px;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        button {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1E40AF;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>ChatNow CN Icon Generator - Expo Go Tarzı Yuvarlak Tasarım</h1>
+    
+    <canvas id="mainIcon" width="1024" height="1024"></canvas>
+    <canvas id="androidForeground" width="512" height="512"></canvas>
+    <canvas id="androidBackground" width="512" height="512"></canvas>
+    <canvas id="splashIcon" width="256" height="256"></canvas>
+    
+    <div class="instructions">
+        <h3>📱 Adım Adım Kurulum:</h3>
+        
+        <div class="step">
+            <strong>1. Ana Icon (1024x1024):</strong>
+            <button onclick="downloadIcon('mainIcon', 'icon.png')">İndir</button>
+            <p>Bu dosyayı <code>assets/images/icon.png</code> olarak kaydet</p>
+        </div>
+        
+        <div class="step">
+            <strong>2. Android Foreground (512x512):</strong>
+            <button onclick="downloadIcon('androidForeground', 'android-icon-foreground.png')">İndir</button>
+            <p>Bu dosyayı <code>assets/images/android-icon-foreground.png</code> olarak kaydet</p>
+        </div>
+        
+        <div class="step">
+            <strong>3. Android Background (512x512):</strong>
+            <button onclick="downloadIcon('androidBackground', 'android-icon-background.png')">İndir</button>
+            <p>Bu dosyayı <code>assets/images/android-icon-background.png</code> olarak kaydet</p>
+        </div>
+        
+        <div class="step">
+            <strong>4. Splash Icon (256x256):</strong>
+            <button onclick="downloadIcon('splashIcon', 'splash-icon.png')">İndir</button>
+            <p>Bu dosyayı <code>assets/images/splash-icon.png</code> olarak kaydet</p>
+        </div>
+        
+        <div class="step">
+            <strong>5. APK'yı Yeniden Build Et:</strong>
+            <p><code>eas build --platform android</code> komutunu çalıştır</p>
+        </div>
+    </div>
+
+    <script>
+        function createCNIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Background - White circle (like Expo Go)
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - size/32, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Add subtle shadow
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+            ctx.shadowBlur = size/32;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = size/64;
+            
+            // CN Text (blue color, like Expo Go style)
+            const fontSize = Math.floor(size * 0.35);
+            ctx.fillStyle = '#3B82F6';
+            ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('CN', size/2, size/2);
+            
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
+        // Helper function for rounded rectangles
+        CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+            this.beginPath();
+            this.moveTo(x + radius, y);
+            this.lineTo(x + width - radius, y);
+            this.quadraticCurveTo(x + width, y, x + width, y + radius);
+            this.lineTo(x + width, y + height - radius);
+            this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            this.lineTo(x + radius, y + height);
+            this.quadraticCurveTo(x, y + height, x, y + height - radius);
+            this.lineTo(x, y + radius);
+            this.quadraticCurveTo(x, y, x + radius, y);
+            this.closePath();
+        }
+
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Generate all icons
+        createCNIcon('mainIcon', 1024);
+        createCNIcon('androidForeground', 512);
+        createCNIcon('androidBackground', 512);
+        createCNIcon('splashIcon', 256);
+    </script>
+</body>
+</html>

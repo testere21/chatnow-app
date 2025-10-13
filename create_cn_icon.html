@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatNow CN Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas" width="1024" height="1024" style="border: 1px solid #ccc;"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Background - Modern gradient
+        const gradient = ctx.createLinearGradient(0, 0, 1024, 1024);
+        gradient.addColorStop(0, '#3B82F6'); // Blue
+        gradient.addColorStop(1, '#1E40AF'); // Darker blue
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1024, 1024);
+        
+        // Add subtle pattern
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        for (let i = 0; i < 50; i++) {
+            ctx.fillRect(Math.random() * 1024, Math.random() * 1024, 2, 2);
+        }
+        
+        // CN Text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 400px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Add text shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillText('CN', 512 + 4, 512 + 4);
+        
+        // Main text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText('CN', 512, 512);
+        
+        // Add subtle border
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(20, 20, 984, 984);
+    </script>
+</body>
+</html>

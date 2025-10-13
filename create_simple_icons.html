@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Icon Creator</title>
+</head>
+<body>
+    <h2>Create ChatNow Icons</h2>
+    
+    <canvas id="iconCanvas" width="512" height="512" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    <br>
+    <a id="downloadIcon" download="icon.png">Download icon.png</a>
+    <br><br>
+    
+    <canvas id="splashCanvas" width="512" height="512" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    <br>
+    <a id="downloadSplash" download="splash-icon.png">Download splash-icon.png</a>
+
+    <script>
+        function createIcon(canvasId, downloadId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Blue gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+            gradient.addColorStop(0, '#3B82F6');
+            gradient.addColorStop(1, '#1E40AF');
+            
+            // Draw rounded rectangle background
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, 512, 512, 100);
+            ctx.fill();
+            
+            // Add subtle pattern dots
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            const dots = [
+                {x: 100, y: 100, r: 1.5},
+                {x: 200, y: 150, r: 1},
+                {x: 300, y: 75, r: 1},
+                {x: 400, y: 125, r: 1.5},
+                {x: 150, y: 250, r: 1},
+                {x: 350, y: 200, r: 1},
+                {x: 75, y: 350, r: 1.5},
+                {x: 250, y: 300, r: 1},
+                {x: 425, y: 350, r: 1},
+                {x: 175, y: 400, r: 1.5},
+                {x: 325, y: 375, r: 1}
+            ];
+            
+            dots.forEach(dot => {
+                ctx.beginPath();
+                ctx.arc(dot.x, dot.y, dot.r, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Draw white "CN" text
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 200px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Add text shadow
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+            
+            ctx.fillText('CN', 256, 256);
+            
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Add border
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.roundRect(10, 10, 492, 492, 100);
+            ctx.stroke();
+            
+            // Create download link
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                document.getElementById(downloadId).href = url;
+            });
+        }
+        
+        // Create both icons
+        createIcon('iconCanvas', 'downloadIcon');
+        createIcon('splashCanvas', 'downloadSplash');
+    </script>
+</body>
+</html>

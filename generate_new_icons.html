@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatNow Icon Generator - New Design</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .icon-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .icon-container {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        
+        .icon-inner {
+            width: 140px;
+            height: 140px;
+            background: #8B5CF6;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .chat-bubble {
+            width: 60px;
+            height: 40px;
+            background: white;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+        
+        .chat-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #8B5CF6;
+            border-radius: 50%;
+        }
+        
+        .app-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #374151;
+            margin-top: 10px;
+        }
+        
+        .download-section {
+            margin-top: 30px;
+        }
+        
+        .download-btn {
+            background: #8B5CF6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #7C3AED;
+            transform: translateY(-2px);
+        }
+        
+        .size-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 ChatNow Icon Generator - New Design</h1>
+        
+        <div class="icon-preview">
+            <div class="icon-container">
+                <div class="icon-inner">
+                    <div class="chat-bubble">
+                        <div class="chat-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-name">ChatNow</div>
+        </div>
+        
+        <div class="download-section">
+            <h3>📱 Icon Boyutları</h3>
+            <button class="download-btn" onclick="generateIcon(512, 'icon.png')">Ana Icon (512x512)</button>
+            <button class="download-btn" onclick="generateIcon(192, 'android-icon-foreground.png')">Android Foreground (192x192)</button>
+            <button class="download-btn" onclick="generateIcon(512, 'android-icon-background.png')">Android Background (512x512)</button>
+            <button class="download-btn" onclick="generateIcon(512, 'splash-icon.png')">Splash Icon (512x512)</button>
+            
+            <div class="size-info">
+                Tüm iconlar PNG formatında indirilecek
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        function generateIcon(size, filename) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Canvas boyutunu ayarla
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Beyaz arka plan
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Gölge efekti
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+            ctx.shadowBlur = size * 0.05;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = size * 0.02;
+            
+            // Ana container (beyaz yuvarlak köşeli kare)
+            const containerSize = size * 0.8;
+            const containerX = (size - containerSize) / 2;
+            const containerY = (size - containerSize) / 2;
+            const borderRadius = size * 0.05;
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.roundRect(containerX, containerY, containerSize, containerSize, borderRadius);
+            ctx.fill();
+            
+            // Gölgeyi sıfırla
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // İç kare (mor)
+            const innerSize = containerSize * 0.7;
+            const innerX = containerX + (containerSize - innerSize) / 2;
+            const innerY = containerY + (containerSize - innerSize) / 2;
+            const innerRadius = size * 0.04;
+            
+            ctx.fillStyle = '#8B5CF6';
+            ctx.beginPath();
+            ctx.roundRect(innerX, innerY, innerSize, innerSize, innerRadius);
+            ctx.fill();
+            
+            // Chat bubble
+            const bubbleWidth = innerSize * 0.4;
+            const bubbleHeight = innerSize * 0.3;
+            const bubbleX = innerX + (innerSize - bubbleWidth) / 2;
+            const bubbleY = innerY + (innerSize - bubbleHeight) / 2;
+            const bubbleRadius = size * 0.02;
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.roundRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight, bubbleRadius);
+            ctx.fill();
+            
+            // Chat bubble kuyruğu
+            const tailSize = size * 0.015;
+            const tailX = bubbleX + bubbleWidth * 0.3;
+            const tailY = bubbleY + bubbleHeight;
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.moveTo(tailX, tailY);
+            ctx.lineTo(tailX - tailSize, tailY + tailSize);
+            ctx.lineTo(tailX + tailSize, tailY + tailSize);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Chat dots
+            const dotSize = size * 0.008;
+            const dotSpacing = size * 0.015;
+            const dotsY = bubbleY + bubbleHeight / 2;
+            const dotsStartX = bubbleX + bubbleWidth * 0.3;
+            
+            ctx.fillStyle = '#8B5CF6';
+            for (let i = 0; i < 3; i++) {
+                const dotX = dotsStartX + i * dotSpacing;
+                ctx.beginPath();
+                ctx.arc(dotX, dotsY, dotSize, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            
+            // Canvas'ı PNG olarak indir
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        }
+        
+        // roundRect polyfill for older browsers
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x + radius, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+    </script>
+</body>
+</html>

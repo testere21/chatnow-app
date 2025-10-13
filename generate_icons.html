@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <h2>ChatNow Icon Generator</h2>
+    
+    <!-- Main App Icon -->
+    <div style="margin: 20px;">
+        <h3>Main App Icon (512x512)</h3>
+        <canvas id="mainIcon" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+        <br><br>
+        <a id="downloadMain" download="icon.png">Download Main Icon (PNG)</a>
+    </div>
+    
+    <!-- Splash Icon -->
+    <div style="margin: 20px;">
+        <h3>Splash Icon (512x512)</h3>
+        <canvas id="splashIcon" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+        <br><br>
+        <a id="downloadSplash" download="splash-icon.png">Download Splash Icon (PNG)</a>
+    </div>
+
+    <script>
+        // Main App Icon
+        const mainCanvas = document.getElementById('mainIcon');
+        const mainCtx = mainCanvas.getContext('2d');
+        
+        // Blue background
+        mainCtx.fillStyle = '#3B82F6';
+        mainCtx.fillRect(0, 0, 512, 512);
+        
+        // White CN text
+        mainCtx.fillStyle = '#FFFFFF';
+        mainCtx.font = 'bold 200px Arial';
+        mainCtx.textAlign = 'center';
+        mainCtx.textBaseline = 'middle';
+        mainCtx.fillText('CN', 256, 256);
+        
+        // Download main icon
+        mainCanvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            document.getElementById('downloadMain').href = url;
+        });
+        
+        // Splash Icon (same as main)
+        const splashCanvas = document.getElementById('splashIcon');
+        const splashCtx = splashCanvas.getContext('2d');
+        
+        // Blue background
+        splashCtx.fillStyle = '#3B82F6';
+        splashCtx.fillRect(0, 0, 512, 512);
+        
+        // White CN text
+        splashCtx.fillStyle = '#FFFFFF';
+        splashCtx.font = 'bold 200px Arial';
+        splashCtx.textAlign = 'center';
+        splashCtx.textBaseline = 'middle';
+        splashCtx.fillText('CN', 256, 256);
+        
+        // Download splash icon
+        splashCanvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            document.getElementById('downloadSplash').href = url;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Integration Test</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        button { padding: 10px 15px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; }
+        button:hover { background-color: #0056b3; }
+        input[type="text"], input[type="password"], input[type="number"], select { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: calc(100% - 120px); }
+        .result { margin-top: 10px; padding: 10px; border-radius: 4px; background-color: #e9ecef; border: 1px solid #ced4da; white-space: pre-wrap; }
+        .success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Frontend Integration Test</h1>
+
+        <h2>1. Backend Bağlantısı</h2>
+        <button onclick="testBackend()">Backend Test Et</button>
+        <div id="backendResult" class="result"></div>
+
+        <h2>2. WebSocket Bağlantısı</h2>
+        <button onclick="testWebSocket()">WebSocket Test Et</button>
+        <div id="wsResult" class="result"></div>
+
+        <h2>3. Kullanıcı Kaydı</h2>
+        <input type="text" id="registerEmail" placeholder="E-posta" value="test@example.com">
+        <input type="password" id="registerPassword" placeholder="Şifre" value="123456">
+        <input type="text" id="registerName" placeholder="Ad" value="Test">
+        <input type="text" id="registerSurname" placeholder="Soyad" value="User">
+        <input type="number" id="registerAge" placeholder="Yaş" value="25">
+        <input type="text" id="registerLocation" placeholder="Konum" value="İstanbul">
+        <select id="registerGender">
+            <option value="male">Erkek</option>
+            <option value="female">Kadın</option>
+        </select>
+        <button onclick="testRegister()">Kullanıcı Kaydet</button>
+        <div id="registerResult" class="result"></div>
+
+        <h2>4. Kullanıcı Girişi</h2>
+        <input type="text" id="loginEmail" placeholder="E-posta" value="test@example.com">
+        <input type="password" id="loginPassword" placeholder="Şifre" value="123456">
+        <button onclick="testLogin()">Giriş Yap</button>
+        <div id="loginResult" class="result"></div>
+
+        <h2>5. Mesaj Gönderme</h2>
+        <input type="text" id="receiverId" placeholder="Alıcı ID">
+        <input type="text" id="messageText" placeholder="Mesaj" value="Merhaba!">
+        <button onclick="testSendMessage()">Mesaj Gönder</button>
+        <div id="messageResult" class="result"></div>
+
+        <h2>6. Sohbet Listesi</h2>
+        <button onclick="testGetChats()">Sohbetleri Getir</button>
+        <div id="chatsResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        let authToken = '';
+        let socket = null;
+
+        // Backend Test
+        async function testBackend() {
+            try {
+                const response = await fetch('http://localhost:3000');
+                const data = await response.json();
+                document.getElementById('backendResult').innerHTML = 
+                    `<div class="success">✅ Backend Çalışıyor! ${JSON.stringify(data, null, 2)}</div>`;
+            } catch (error) {
+                document.getElementById('backendResult').innerHTML = 
+                    `<div class="error">❌ Backend Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // WebSocket Test
+        function testWebSocket() {
+            try {
+                if (typeof io === 'undefined') {
+                    document.getElementById('wsResult').innerHTML = 
+                        `<div class="error">❌ Socket.IO client yüklenemedi.</div>`;
+                    return;
+                }
+
+                socket = io('http://localhost:3000');
+                
+                socket.on('connect', () => {
+                    document.getElementById('wsResult').innerHTML = 
+                        `<div class="success">✅ WebSocket Bağlandı! Socket ID: ${socket.id}</div>`;
+                });
+
+                socket.on('connect_error', (error) => {
+                    document.getElementById('wsResult').innerHTML = 
+                        `<div class="error">❌ WebSocket Bağlantı Hatası: ${error.message}</div>`;
+                });
+
+                socket.on('newMessage', (data) => {
+                    document.getElementById('wsResult').innerHTML += 
+                        `<div class="info">📨 Yeni Mesaj: ${JSON.stringify(data)}</div>`;
+                });
+
+                socket.on('disconnect', () => {
+                    document.getElementById('wsResult').innerHTML += 
+                        `<div class="error">❌ WebSocket Bağlantısı Kesildi</div>`;
+                });
+
+            } catch (error) {
+                document.getElementById('wsResult').innerHTML = 
+                    `<div class="error">❌ WebSocket Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // Register Test
+        async function testRegister() {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const name = document.getElementById('registerName').value;
+            const surname = document.getElementById('registerSurname').value;
+            const age = parseInt(document.getElementById('registerAge').value);
+            const location = document.getElementById('registerLocation').value;
+            const gender = document.getElementById('registerGender').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, name, surname, age, location, gender })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('registerResult').innerHTML = 
+                        `<div class="success">✅ Kayıt Başarılı! ${JSON.stringify(data, null, 2)}</div>`;
+                } else {
+                    document.getElementById('registerResult').innerHTML = 
+                        `<div class="error">❌ Kayıt Hatası: ${data.message || JSON.stringify(data, null, 2)}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('registerResult').innerHTML = 
+                    `<div class="error">❌ Kayıt Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // Login Test
+        async function testLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    authToken = data.token;
+                    document.getElementById('loginResult').innerHTML = 
+                        `<div class="success">✅ Giriş Başarılı! Token: ${authToken.substring(0, 30)}...</div>`;
+                } else {
+                    document.getElementById('loginResult').innerHTML = 
+                        `<div class="error">❌ Giriş Hatası: ${data.message || JSON.stringify(data, null, 2)}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('loginResult').innerHTML = 
+                    `<div class="error">❌ Giriş Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // Send Message Test
+        async function testSendMessage() {
+            if (!authToken) {
+                document.getElementById('messageResult').innerHTML = 
+                    `<div class="error">❌ Mesaj göndermek için önce giriş yapmalısınız.</div>`;
+                return;
+            }
+            const receiverId = document.getElementById('receiverId').value;
+            const text = document.getElementById('messageText').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/messages`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ receiverId, text })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('messageResult').innerHTML = 
+                        `<div class="success">✅ Mesaj Gönderildi! ${JSON.stringify(data, null, 2)}</div>`;
+                } else {
+                    document.getElementById('messageResult').innerHTML = 
+                        `<div class="error">❌ Mesaj Gönderme Hatası: ${data.message || JSON.stringify(data, null, 2)}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('messageResult').innerHTML = 
+                    `<div class="error">❌ Mesaj Gönderme Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // Get Chats Test
+        async function testGetChats() {
+            if (!authToken) {
+                document.getElementById('chatsResult').innerHTML = 
+                    `<div class="error">❌ Sohbetleri getirmek için önce giriş yapmalısınız.</div>`;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/chats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('chatsResult').innerHTML = 
+                        `<div class="success">✅ Sohbetler Getirildi! ${JSON.stringify(data, null, 2)}</div>`;
+                } else {
+                    document.getElementById('chatsResult').innerHTML = 
+                        `<div class="error">❌ Sohbet Getirme Hatası: ${data.message || JSON.stringify(data, null, 2)}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('chatsResult').innerHTML = 
+                    `<div class="error">❌ Sohbet Getirme Hatası: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

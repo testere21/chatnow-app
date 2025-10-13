@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatNow CN Icon</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid #333;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1E40AF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ChatNow CN Icon Generator</h1>
+        <canvas id="canvas" width="1024" height="1024"></canvas>
+        
+        <div class="instructions">
+            <h3>Nasıl Kullanılır:</h3>
+            <p>1. Sağ tık yapın ve "Resmi farklı kaydet" seçin</p>
+            <p>2. Dosya adını "icon.png" olarak kaydedin</p>
+            <p>3. assets/images/ klasörüne kopyalayın</p>
+            <button onclick="downloadIcon()">İndir</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Background - Modern blue gradient
+        const gradient = ctx.createLinearGradient(0, 0, 1024, 1024);
+        gradient.addColorStop(0, '#3B82F6'); // Blue
+        gradient.addColorStop(1, '#1E40AF'); // Darker blue
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1024, 1024);
+        
+        // Add subtle pattern dots
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        for (let i = 0; i < 30; i++) {
+            const x = Math.random() * 1024;
+            const y = Math.random() * 1024;
+            const size = Math.random() * 3 + 1;
+            ctx.fillRect(x, y, size, size);
+        }
+        
+        // CN Text with shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.font = 'bold 400px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('CN', 512 + 6, 512 + 6);
+        
+        // Main CN text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText('CN', 512, 512);
+        
+        // Add subtle border
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(20, 20, 984, 984);
+        
+        function downloadIcon() {
+            const link = document.createElement('a');
+            link.download = 'icon.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>

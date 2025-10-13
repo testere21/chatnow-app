@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔌 WebSocket Test</h1>
+    
+    <div class="test-section">
+        <h2>Backend Durumu</h2>
+        <button onclick="checkBackend()">Backend Kontrol Et</button>
+        <div id="backendResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>WebSocket Bağlantısı</h2>
+        <button onclick="connectWS()">WebSocket Bağlan</button>
+        <button onclick="disconnectWS()">Bağlantıyı Kes</button>
+        <div id="wsResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Socket.IO Test</h2>
+        <button onclick="testSocketIO()">Socket.IO Test Et</button>
+        <div id="socketResult" class="result"></div>
+    </div>
+
+    <script>
+        let socket = null;
+
+        // Backend kontrolü
+        async function checkBackend() {
+            try {
+                const response = await fetch('http://localhost:3000');
+                const data = await response.json();
+                document.getElementById('backendResult').innerHTML = 
+                    `<div class="success">✅ Backend Çalışıyor!</div>
+                     <pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('backendResult').innerHTML = 
+                    `<div class="error">❌ Backend Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // WebSocket bağlantısı
+        function connectWS() {
+            try {
+                // Native WebSocket test
+                const ws = new WebSocket('ws://localhost:3000');
+                
+                ws.onopen = function() {
+                    document.getElementById('wsResult').innerHTML = 
+                        `<div class="success">✅ Native WebSocket Bağlandı!</div>`;
+                    ws.close();
+                };
+
+                ws.onerror = function(error) {
+                    document.getElementById('wsResult').innerHTML = 
+                        `<div class="error">❌ Native WebSocket Hatası: ${error}</div>`;
+                };
+
+            } catch (error) {
+                document.getElementById('wsResult').innerHTML = 
+                    `<div class="error">❌ WebSocket Hatası: ${error.message}</div>`;
+            }
+        }
+
+        function disconnectWS() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+                document.getElementById('wsResult').innerHTML += 
+                    `<div class="info">🔌 WebSocket Bağlantısı Kapatıldı</div>`;
+            }
+        }
+
+        // Socket.IO test
+        function testSocketIO() {
+            try {
+                // Socket.IO client kontrolü
+                if (typeof io === 'undefined') {
+                    document.getElementById('socketResult').innerHTML = 
+                        `<div class="error">❌ Socket.IO client yüklenemedi!</div>
+                         <div class="info">CDN bağlantısı kontrol ediliyor...</div>`;
+                    
+                    // CDN alternatifi dene
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
+                    script.onload = function() {
+                        document.getElementById('socketResult').innerHTML += 
+                            `<div class="success">✅ Socket.IO client yüklendi!</div>`;
+                        testSocketIOConnection();
+                    };
+                    script.onerror = function() {
+                        document.getElementById('socketResult').innerHTML += 
+                            `<div class="error">❌ Socket.IO client yüklenemedi!</div>`;
+                    };
+                    document.head.appendChild(script);
+                    return;
+                }
+
+                testSocketIOConnection();
+
+            } catch (error) {
+                document.getElementById('socketResult').innerHTML = 
+                    `<div class="error">❌ Socket.IO Hatası: ${error.message}</div>`;
+            }
+        }
+
+        function testSocketIOConnection() {
+            try {
+                socket = io('http://localhost:3000');
+                
+                socket.on('connect', () => {
+                    document.getElementById('socketResult').innerHTML = 
+                        `<div class="success">✅ Socket.IO Bağlandı! Socket ID: ${socket.id}</div>`;
+                });
+
+                socket.on('connect_error', (error) => {
+                    document.getElementById('socketResult').innerHTML = 
+                        `<div class="error">❌ Socket.IO Bağlantı Hatası: ${error.message}</div>`;
+                });
+
+                socket.on('disconnect', () => {
+                    document.getElementById('socketResult').innerHTML += 
+                        `<div class="info">🔌 Socket.IO Bağlantısı Kesildi</div>`;
+                });
+
+            } catch (error) {
+                document.getElementById('socketResult').innerHTML = 
+                    `<div class="error">❌ Socket.IO Bağlantı Hatası: ${error.message}</div>`;
+            }
+        }
+
+        // Sayfa yüklendiğinde backend kontrolü
+        window.onload = function() {
+            checkBackend();
+        };
+    </script>
+    
+    <!-- Socket.IO Client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</body>
+</html>
